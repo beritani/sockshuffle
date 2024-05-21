@@ -8,9 +8,10 @@ COPY src/ .
 RUN CGO_ENABLED=0 go build -o /sockshuffle
 
 # Final
-FROM gcr.io/distroless/static-debian11:nonroot
+FROM gcr.io/distroless/base-debian11:nonroot
 
-COPY --from=build /sockshuffle /sockshuffle
+COPY --from=build --chown=nonroot:nonroot /sockshuffle /sockshuffle
+USER nonroot:nonroot
 ENTRYPOINT [ "/sockshuffle" ]
 
 LABEL org.opencontainers.image.title="sockshuffle"
