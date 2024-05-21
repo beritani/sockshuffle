@@ -17,7 +17,7 @@ sockshuffle is a lightweight SOCKS5 proxy load balancer designed to efficiently 
 
 ## WireGuard Proxies
 
-Using the [wireproxy](https://github.com/pufferffish/wireproxy) you can host a SOCKS5 proxy using docker that routes traffic through a WireGuard connections.
+Using the [wireproxy](https://github.com/pufferffish/wireproxy) you can host a SOCKS5 proxy using docker that routes traffic through WireGuard connections.
 
 ```conf
 # configs/wg0.conf
