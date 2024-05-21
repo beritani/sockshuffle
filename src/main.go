@@ -76,8 +76,7 @@ func main() {
 
 	if username != "" && password != "" {
 		opts = append(opts, socks5.WithCredential(socks5.StaticCredentials{
-			username: username,
-			password: password,
+			username: password,
 		}))
 	}
 
