@@ -21,12 +21,11 @@ hidden containers = config_keys.toMap((k) -> k, (v) -> new Service {
 }).toMapping()
 
 // Docker Compose Output
-version = "3"
-
 services = (containers) {
     ["sockshuffle"] {
         container_name = "sockshuffle"
         image = "beritani/sockshuffle:latest"
+        restart = "unless-stopped"
         ports = List("1080:1080")
         environment = List("PROXIES=" + config_keys.map((v) -> "socks5://" + v + ":25344").join(","))
         networks = List("proxy")
