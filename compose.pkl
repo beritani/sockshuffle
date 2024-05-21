@@ -1,0 +1,44 @@
+hidden const configPath = "./configs"
+hidden regex = Regex(".*/(.*)\\.conf")
+
+class Service {
+    container_name = ""
+    image = "ghcr.io/pufferffish/wireproxy:latest"
+    restart = "unless-stopped"
+    networks = List("proxy")
+    configs = List(new Mapping {
+        ["source"] = container_name
+        ["target"] = "/etc/wireproxy/config"
+    })
+}
+
+// Read Configs
+hidden raw_configs = read*("\(configPath)/*.conf")
+hidden config_keys = raw_configs.keys.map((n) -> regex.matchEntire(n).groups[1].value)
+
+hidden containers = config_keys.toMap((k) -> k, (v) -> new Service {
+    container_name = v
+}).toMapping()
+
+// Docker Compose Output
+version = "3"
+
+services = (containers) {
+    ["sockshuffle"] {
+        container_name = "sockshuffle"
+        image = "beritani/sockshuffle:latest"
+        ports = List("1080:1080")
+        environment = List("PROXIES=" + config_keys.map((v) -> "socks5://" + v + ":25344").join(","))
+        networks = List("proxy")
+    }
+}
+
+configs = raw_configs.toMap().entries.toMap((k) -> regex.matchEntire(k.key).groups[1].value, (v) -> new Mapping {
+    ["content"] = v.value.text + "\n[Socks5]\nBindAddress = 0.0.0.0:25344"
+}).toMapping()
+
+networks {
+    proxy {
+        driver = "bridge"
+    }
+}
