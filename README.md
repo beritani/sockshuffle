@@ -2,6 +2,11 @@
 
 sockshuffle is a lightweight SOCKS5 proxy load balancer designed to efficiently distribute network traffic among multiple proxies.
 
+## Run
+```
+% docker run -e PROXIES=socks5://localhost:1081,socks5://localhost:1082 --network host beritani/sockshuffle:latest
+```
+
 ## Build and Run
 
 ```
